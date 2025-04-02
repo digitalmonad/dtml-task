@@ -1,0 +1,70 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+*.log
+*.pid
+*.seed
+
+
+*.db
+db.sqlite3
+
+
+.idea/          # PyCharm
+.vscode/        # Visual Studio Code
+*.swp           # Vim
+*.sublime-*     # Sublime Text
+
+
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+
+
+*.env           # Umgebungsvariablen (z. B. API-Schlüssel)
+local_settings.py
+
+
+*.bak
+*.tmp
+*.temp
+
+
+.DS_Store       # macOS
+Thumbs.db       # Windows
