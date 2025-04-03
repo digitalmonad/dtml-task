@@ -50,6 +50,27 @@ Since we want to compute the metrics based on arbitrary date offset in minutes, 
 
 ## Solution
 
+### System diagram
+
+```mermaid
+C4Context
+  title System Context Diagram for GitHub Scraper App
+
+  Person(user, "User", "Interacts with the application via API")
+  
+  System_Boundary(app, "GitHub Scraper App") {
+    Container(fastapi, "FastAPI Service", "Python + FastAPI", "Exposes REST API and schedules GitHub data scraping jobs")
+    ContainerDb(database, "SQLite", "Database", "Stores scraped GitHub events and other metadata")
+  }
+
+  System_Ext(github_api, "GitHub API", "Provides public GitHub event data")
+
+  Rel(user, fastapi, "Sends API requests")
+  Rel(fastapi, github_api, "Fetches GitHub events", "HTTP")
+  Rel(fastapi, database, "Stores scraped data")
+  Rel(database, fastapi, "Reads stored data"
+```
+
 ### 1) Rate limiting
 
 GitHub provides both public (unauthenticated) and personal (authenticated) limits for their API.
