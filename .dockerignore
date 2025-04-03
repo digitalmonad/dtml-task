@@ -1,0 +1,35 @@
+# Ignorovat složky a soubory, které nejsou potřeba ve výsledném kontejneru
+
+# Python cache a dočasné soubory
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Editor a IDE soubory
+.vscode/
+.idea/
+*.swp
+
+# Git soubory
+.git/
+.gitignore
+
+# Docker soubory (aby se nestaly součástí image)
+.dockerignore
+Dockerfile
+
+# Virtuální prostředí (pokud bys ho měl v repozitáři)
+venv/
+.venv/
+.env
+.env.*
+
+# SQLite databáze (pokud ji mountuješ jako volume)
+*.db
+*.sqlite3
+
+# Statické a generované soubory
+/media/
+/static/

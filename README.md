@@ -24,22 +24,22 @@ _We expect it will take 8 hours to do it properly._
 **From this a formulated following requirements:**
 
 ### Functional requirements:
-- [ ] Fetch GitHub events from https://api.github.com/events.
+- [X] Fetch GitHub events from https://api.github.com/events.
 
-- [ ] Filter and process only the following event types: 
+- [X] Filter and process only the following event types: 
     - WatchEvent
     - PullRequestEvent
     - IssuesEvent
 
-- [ ] The app should provide REST API Endpoints that:
-   - [ ] Calculate the average time between pull requests (particularly PullRequestEvent) for a given repository.
+- [X] The app should provide REST API Endpoints that:
+   - [X] Calculate the average time between pull requests (particularly PullRequestEvent) for a given repository.
    ```GET /metrics/events/pull_request/average/{repository_name}```
-   - [ ] Return the total number of events grouped by type (all event types) for a given time offset (in minutes).
+   - [X] Return the total number of events grouped by type (all event types) for a given time offset (in minutes).
    ```GET /metrics/events/{event_type}/total?offset={minutes}```
-   - [ ] (Optional) Provide a meaningful visual representation of an existing (all event types) or newly introduced metric.
-   ```GET /visualization/{metric_name}```
+   - [X] (Optional) Provide a meaningful visual representation of an existing (all event types) or newly introduced metric.
+   ```GET /metrics/visualization/{metric_name}```
 
-- [ ] Store collected events in a persistent or semi-persistent data store (e.g., database or in-memory storage)
+- [X] Store collected events in a persistent or semi-persistent data store (e.g., database or in-memory storage)
 Since we want to compute the metrics based on arbitrary date offset in minutes, we need to store them for reasonable amount of time.
 
 ### Non-Functional Requirements
@@ -72,8 +72,47 @@ The https://api.github.com/events endpoint gives back an array of last 10 endpoi
 Github also provides [endpoint](https://docs.github.com/en/rest/activity/events?apiVersion=2022-11-28#list-repository-events) for fetching just the events happening at particular repo.
 Since the assignment explicitly states that "Based on the collected events, metrics shall be provided...", I will ignore this endpoint and I'll work just with the ```/events``` endpoint to get the data.
 
-The docs explicitly says that the GitHub keeps just last 300 latest events and is paginated and the offset can be set (default is 10, maximum 100). Since we aim to make as little as possible API calls it makes sense to make 3 calls with offset 100. Each event has a unique ID, so we can detect potential duplicities easily.
+The docs explicitly says that the GitHub keeps just last 300 latest events, paginated and the offset can be set (default is 10, maximum 100).
+Given that public GitHub REST API provides only 60 requests per hour (otherwise access is denied) we are quite restricted.
+We have to find some sweet spot between getting as much as possible data 20 times per hour at maximum (60/3=20) when making 3*100 calls or we can scrape or choose other frequency.
+I think that a good tradeoff is to scrape 100 events every minute, since this way we hopefully going to get as much as possible and as much as possible fresh data.
 
-Given that public GitHub REST API provides only 60 requests (otherwise access is denied) it makes sense to scrape data 20 times per minute at maximum (60/3=20).
 
 
+## Installation & Setup
+### Prerequisities
+- git installed on your machine
+- Python 3 installed
+- (optional) Docker, docker-compose
+
+### Clone the Repository
+```git clone https://github.com/digitalmonad/dtml-task.git```
+```cd dtml-task```
+
+### Running Locally Without Docker
+##### 1. Create and Activate a Virtual Environment
+On macOS/Linux:
+
+```python3 -m venv venv```
+```source venv/bin/activate```
+
+##### 2. Install Dependencies
+```pip install -r requirements.txt```
+
+#### 3. Run the Application
+```uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload```
+
+#### 4. Run the Application
+Access the app on http://localhost:8000.
+
+#### 5. Deactivate the Virtual Environment
+```deactivate```
+
+### Running Locally With docker-compose
+```docker compose up```
+
+#### Seeding
+You can optionaly seed the database by running
+``` python -m app.seed_db``` in root project folder.
+
+The app fetches data every 60 seconds from GitHub, so wait few minutes the get some data or seed the db with demo data.
